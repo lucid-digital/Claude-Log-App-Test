@@ -5,4 +5,5 @@ export interface DeveloperLog {
   date: string;
   taskDescription: string;
   category: string;
+  projectId: string;
 }
