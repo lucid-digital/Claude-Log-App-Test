@@ -1,14 +1,19 @@
 import React, { useMemo } from 'react';
-import { DeveloperLog } from '../types/DeveloperLog';
+import { DeveloperLog, Project } from '../types';
 
 interface DeveloperLogListProps {
   logs: DeveloperLog[];
+  selectedProjectId: string | null;
+  projects: Project[];
 }
 
-export const DeveloperLogList: React.FC<DeveloperLogListProps> = ({ logs }) => {
-  const groupedLogs = useMemo(() => {
-    console.log('Grouping logs:', logs);
-    const grouped = logs.reduce((acc, log) => {
+export const DeveloperLogList: React.FC<DeveloperLogListProps> = ({ logs, selectedProjectId, projects }) => {
+  const filteredAndGroupedLogs = useMemo(() => {
+    const filteredLogs = selectedProjectId
+      ? logs.filter(log => log.projectId === selectedProjectId)
+      : logs;
+
+    return filteredLogs.reduce((acc, log) => {
       const name = log.developerName.toLowerCase();
       if (!acc[name]) {
         acc[name] = [];
@@ -16,9 +21,7 @@ export const DeveloperLogList: React.FC<DeveloperLogListProps> = ({ logs }) => {
       acc[name].push(log);
       return acc;
     }, {} as Record<string, DeveloperLog[]>);
-    console.log('Grouped logs:', grouped);
-    return grouped;
-  }, [logs]); // Add logs to the dependency array
+  }, [logs, selectedProjectId]);
 
   const calculateTotalHours = (developerLogs: DeveloperLog[]): number => {
     return developerLogs.reduce((sum, log) => sum + log.hoursWorked, 0);
@@ -28,13 +31,14 @@ export const DeveloperLogList: React.FC<DeveloperLogListProps> = ({ logs }) => {
     return new Date(dateString).toLocaleDateString();
   };
 
-  console.log('Rendering DeveloperLogList with groupedLogs:', groupedLogs);
+  const selectedProject = projects.find(p => p.id === selectedProjectId);
 
   return (
     <div>
-      {Object.entries(groupedLogs).map(([developerName, developerLogs]) => (
+      {selectedProject && <h2>Project: {selectedProject.name}</h2>}
+      {Object.entries(filteredAndGroupedLogs).map(([developerName, developerLogs]) => (
         <div key={developerName} className="developer-table-container">
-          <h2>{developerLogs[0].developerName}</h2>
+          <h3>{developerName}</h3>
           <table className="developer-table">
             <thead>
               <tr>
@@ -42,6 +46,7 @@ export const DeveloperLogList: React.FC<DeveloperLogListProps> = ({ logs }) => {
                 <th>Hours</th>
                 <th>Category</th>
                 <th>Description</th>
+                {!selectedProjectId && <th>Project</th>}
               </tr>
             </thead>
             <tbody>
@@ -51,12 +56,13 @@ export const DeveloperLogList: React.FC<DeveloperLogListProps> = ({ logs }) => {
                   <td>{log.hoursWorked.toFixed(1)}</td>
                   <td>{log.category}</td>
                   <td>{log.taskDescription}</td>
+                  {!selectedProjectId && <td>{projects.find(p => p.id === log.projectId)?.name || 'N/A'}</td>}
                 </tr>
               ))}
             </tbody>
             <tfoot>
               <tr>
-                <td colSpan={4} className="total-hours">
+                <td colSpan={selectedProjectId ? 4 : 5} className="total-hours">
                   Total Hours: {calculateTotalHours(developerLogs).toFixed(1)}
                 </td>
               </tr>

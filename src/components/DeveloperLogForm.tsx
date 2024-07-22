@@ -1,40 +1,67 @@
 import React, { useState } from 'react';
-import { DeveloperLog } from '../types/DeveloperLog';
+import { DeveloperLog, Project } from '../types';
 import { isValidCategory } from '../utils/categories';
 
 interface DeveloperLogFormProps {
   onAddLog: (log: DeveloperLog) => void;
   categories: string[];
+  projects: Project[];
 }
 
-export const DeveloperLogForm: React.FC<DeveloperLogFormProps> = ({ onAddLog, categories }) => {
-  const [developerName, setDeveloperName] = useState('');
-  const [hoursWorked, setHoursWorked] = useState('');
-  const [date, setDate] = useState('');
-  const [taskDescription, setTaskDescription] = useState('');
-  const [category, setCategory] = useState('');
+interface FormState {
+  developerName: string;
+  hoursWorked: string;
+  date: string;
+  taskDescription: string;
+  category: string;
+  projectId: string;
+}
+
+const initialFormState: FormState = {
+  developerName: '',
+  hoursWorked: '',
+  date: '',
+  taskDescription: '',
+  category: '',
+  projectId: '',
+};
+
+export const DeveloperLogForm: React.FC<DeveloperLogFormProps> = ({ onAddLog, categories, projects }) => {
+  const [formState, setFormState] = useState<FormState>(initialFormState);
   const [categoryError, setCategoryError] = useState('');
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormState((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+    if (name === 'category') {
+      setCategoryError('');
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isValidCategory(category)) {
+    if (!isValidCategory(formState.category)) {
       setCategoryError('Please select a valid category');
       return;
     }
     const newLog: DeveloperLog = {
       id: Date.now().toString(),
-      developerName,
-      hoursWorked: parseFloat(hoursWorked),
-      date,
-      taskDescription,
-      category,
+      developerName: formState.developerName,
+      hoursWorked: parseFloat(formState.hoursWorked),
+      date: formState.date,
+      taskDescription: formState.taskDescription,
+      category: formState.category,
+      projectId: formState.projectId,
     };
     onAddLog(newLog);
-    setDeveloperName('');
-    setHoursWorked('');
-    setDate('');
-    setTaskDescription('');
-    setCategory('');
+    resetForm();
+  };
+
+  const resetForm = () => {
+    setFormState(initialFormState);
     setCategoryError('');
   };
 
@@ -45,8 +72,9 @@ export const DeveloperLogForm: React.FC<DeveloperLogFormProps> = ({ onAddLog, ca
         <input
           type="text"
           id="developerName"
-          value={developerName}
-          onChange={(e) => setDeveloperName(e.target.value)}
+          name="developerName"
+          value={formState.developerName}
+          onChange={handleInputChange}
           required
         />
       </div>
@@ -54,11 +82,9 @@ export const DeveloperLogForm: React.FC<DeveloperLogFormProps> = ({ onAddLog, ca
         <label htmlFor="category">Category:</label>
         <select
           id="category"
-          value={category}
-          onChange={(e) => {
-            setCategory(e.target.value);
-            setCategoryError('');
-          }}
+          name="category"
+          value={formState.category}
+          onChange={handleInputChange}
           required
         >
           <option value="">Select a category</option>
@@ -75,8 +101,9 @@ export const DeveloperLogForm: React.FC<DeveloperLogFormProps> = ({ onAddLog, ca
         <input
           type="number"
           id="hoursWorked"
-          value={hoursWorked}
-          onChange={(e) => setHoursWorked(e.target.value)}
+          name="hoursWorked"
+          value={formState.hoursWorked}
+          onChange={handleInputChange}
           required
           step="0.1"
           min="0"
@@ -87,8 +114,9 @@ export const DeveloperLogForm: React.FC<DeveloperLogFormProps> = ({ onAddLog, ca
         <input
           type="date"
           id="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
+          name="date"
+          value={formState.date}
+          onChange={handleInputChange}
           required
         />
       </div>
@@ -96,10 +124,28 @@ export const DeveloperLogForm: React.FC<DeveloperLogFormProps> = ({ onAddLog, ca
         <label htmlFor="taskDescription">Task Description:</label>
         <textarea
           id="taskDescription"
-          value={taskDescription}
-          onChange={(e) => setTaskDescription(e.target.value)}
+          name="taskDescription"
+          value={formState.taskDescription}
+          onChange={handleInputChange}
           required
         />
+      </div>
+      <div className="form-group">
+        <label htmlFor="projectId">Project:</label>
+        <select
+          id="projectId"
+          name="projectId"
+          value={formState.projectId}
+          onChange={handleInputChange}
+          required
+        >
+          <option value="">Select a project</option>
+          {projects.map((proj) => (
+            <option key={proj.id} value={proj.id}>
+              {proj.name}
+            </option>
+          ))}
+        </select>
       </div>
       <button type="submit">Add Log</button>
     </form>
