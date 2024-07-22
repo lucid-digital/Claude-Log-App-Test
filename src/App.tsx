@@ -31,7 +31,7 @@ const App: React.FC = () => {
 
   return (
     <div className="app-container">
-      <Sidebar projects={projects} onSelectProject={selectProject} />
+      <Sidebar projects={projects} onSelectProject={selectProject} onAddProject={addProject} />
       <div className="main-content">
         <h1>Developer Work Log</h1>
         <ProjectForm onAddProject={addProject} />
