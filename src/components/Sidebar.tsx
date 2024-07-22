@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
 import { Project } from '../types/Project';
 import { ProjectForm } from './ProjectForm';
+import { projectColors } from '../utils/colors';
 
 interface SidebarProps {
   projects: Project[];
   onSelectProject: (project: Project) => void;
+  onAddProject: (project: Project) => void;
 }
 
-const projectColors = [
-  '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', 
-  '#F06292', '#AED581', '#7986CB', '#4DB6AC', '#FFD54F'
-];
-
-export const Sidebar: React.FC<SidebarProps> = ({ projects, onSelectProject }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ projects, onSelectProject, onAddProject }) => {
   const [showForm, setShowForm] = useState(false);
 
   const toggleForm = () => setShowForm(!showForm);
@@ -25,6 +22,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ projects, onSelectProject }) =
           <div className="popup">
             <h2>Add New Project</h2>
             <ProjectForm onAddProject={(project) => {
+              onAddProject(project);
               onSelectProject(project);
               toggleForm();
             }} />

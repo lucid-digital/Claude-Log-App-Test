@@ -34,6 +34,7 @@ const App: React.FC = () => {
       <Sidebar projects={projects} onSelectProject={selectProject} />
       <div className="main-content">
         <h1>Developer Work Log</h1>
+        <ProjectForm onAddProject={addProject} />
         <DeveloperLogForm onAddLog={addLog} categories={categories} projects={projects} />
         <DeveloperLogList logs={filteredLogs} selectedProjectId={selectedProject?.id || null} projects={projects} />
       </div>
