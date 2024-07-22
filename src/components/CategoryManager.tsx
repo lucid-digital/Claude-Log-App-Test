@@ -1,20 +1,27 @@
 import React, { useState } from 'react';
 import { PREDEFINED_CATEGORIES } from '../utils/categories';
 
-export const CategoryManager: React.FC = () => {
-  const [categories, setCategories] = useState<string[]>(PREDEFINED_CATEGORIES);
-  const [newCategory, setNewCategory] = useState('');
+interface CategoryManagerProps {
+  categories: string[];
+  onAddCategory: (category: string) => void;
+  onRemoveCategory: (category: string) => void;
+}
+
+export const CategoryManager: React.FC<CategoryManagerProps> = ({
+  categories,
+  onAddCategory,
+  onRemoveCategory
+}) => {
+  const [selectedCategory, setSelectedCategory] = useState('');
 
   const addCategory = () => {
-    if (newCategory && !categories.includes(newCategory)) {
-      setCategories([...categories, newCategory]);
-      setNewCategory('');
+    if (selectedCategory && !categories.includes(selectedCategory)) {
+      onAddCategory(selectedCategory);
+      setSelectedCategory('');
     }
   };
 
-  const removeCategory = (categoryToRemove: string) => {
-    setCategories(categories.filter(category => category !== categoryToRemove));
-  };
+  const availableCategories = PREDEFINED_CATEGORIES.filter(cat => !categories.includes(cat));
 
   return (
     <div>
@@ -23,17 +30,20 @@ export const CategoryManager: React.FC = () => {
         {categories.map(category => (
           <li key={category}>
             {category}
-            <button onClick={() => removeCategory(category)}>Remove</button>
+            <button onClick={() => onRemoveCategory(category)}>Remove</button>
           </li>
         ))}
       </ul>
-      <input
-        type="text"
-        value={newCategory}
-        onChange={(e) => setNewCategory(e.target.value)}
-        placeholder="New category"
-      />
-      <button onClick={addCategory}>Add Category</button>
+      <select
+        value={selectedCategory}
+        onChange={(e) => setSelectedCategory(e.target.value)}
+      >
+        <option value="">Select a category to add</option>
+        {availableCategories.map(cat => (
+          <option key={cat} value={cat}>{cat}</option>
+        ))}
+      </select>
+      <button onClick={addCategory} disabled={!selectedCategory}>Add Category</button>
     </div>
   );
 };

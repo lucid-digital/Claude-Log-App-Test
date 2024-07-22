@@ -5,44 +5,74 @@ interface DeveloperLogListProps {
   logs: DeveloperLog[];
 }
 
-const calculateTotalHours = (logs: DeveloperLog[]): { [key: string]: number } => {
-  return logs.reduce((acc, log) => {
-    acc[log.developerName] = (acc[log.developerName] || 0) + log.hoursWorked;
-    return acc;
-  }, {} as { [key: string]: number });
-};
-
 export const DeveloperLogList: React.FC<DeveloperLogListProps> = ({ logs }) => {
-  const totalHours = calculateTotalHours(logs);
+  // Group logs by developer
+  const logsByDeveloper = logs.reduce((acc, log) => {
+    if (!acc[log.developerName]) {
+      acc[log.developerName] = [];
+    }
+    acc[log.developerName].push(log);
+    return acc;
+  }, {} as Record<string, DeveloperLog[]>);
+
+  const renderTable = (developerName: string, developerLogs: DeveloperLog[]) => {
+    const totalHours = developerLogs.reduce((sum, log) => sum + log.hoursWorked, 0);
+
+    return (
+      <div key={developerName}>
+        <h3>{developerName}</h3>
+        <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
+          <thead>
+            <tr>
+              <th style={tableHeaderStyle}>Date</th>
+              <th style={tableHeaderStyle}>Hours</th>
+              <th style={tableHeaderStyle}>Category</th>
+              <th style={tableHeaderStyle}>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {developerLogs.map((log) => (
+              <tr key={log.id}>
+                <td style={tableCellStyle}>{log.date}</td>
+                <td style={tableCellStyle}>{log.hoursWorked}</td>
+                <td style={tableCellStyle}>{log.category}</td>
+                <td style={tableCellStyle}>{log.taskDescription}</td>
+              </tr>
+            ))}
+            <tr>
+              <td style={totalRowStyle} colSpan={3}>Total Hours:</td>
+              <td style={totalRowStyle}>{totalHours.toFixed(2)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    );
+  };
 
   return (
     <div>
       <h2>Developer Logs</h2>
-      <div>
-        <h3>Total Hours per Developer:</h3>
-        <ul>
-          {Object.entries(totalHours).map(([name, hours]) => (
-            <li key={name}>{name}: {hours} hours</li>
-          ))}
-        </ul>
-      </div>
-      {logs.length === 0 ? (
-        <p>No logs yet. Add a new log to get started!</p>
-      ) : (
-        <ul>
-          {logs.map((log) => (
-            <li key={log.id}>
-              <strong>{log.developerName}</strong> - {log.date}
-              <br />
-              Category: {log.category}
-              <br />
-              Hours: {log.hoursWorked}
-              <br />
-              Task: {log.taskDescription}
-            </li>
-          ))}
-        </ul>
+      {Object.entries(logsByDeveloper).map(([developerName, developerLogs]) =>
+        renderTable(developerName, developerLogs)
       )}
     </div>
   );
+};
+
+const tableHeaderStyle: React.CSSProperties = {
+  backgroundColor: '#f2f2f2',
+  padding: '8px',
+  textAlign: 'left',
+  borderBottom: '1px solid #ddd',
+};
+
+const tableCellStyle: React.CSSProperties = {
+  padding: '8px',
+  borderBottom: '1px solid #ddd',
+};
+
+const totalRowStyle: React.CSSProperties = {
+  fontWeight: 'bold',
+  padding: '8px',
+  borderTop: '2px solid #ddd',
 };

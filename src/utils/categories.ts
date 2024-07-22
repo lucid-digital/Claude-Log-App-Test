@@ -1,10 +1,9 @@
 export const PREDEFINED_CATEGORIES = [
   "Front-end",
   "Back-end",
-  "Database",
-  "Research",
-  "Debugging",
-  "Server Configuration"
+  "Full-stack",
+  "Design",
+  "Testing"
 ];
 
 export const isValidCategory = (category: string): boolean => {
