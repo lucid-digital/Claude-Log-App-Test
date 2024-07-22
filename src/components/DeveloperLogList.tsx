@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { DeveloperLog, Project } from '../types';
+import { projectColors } from '../utils/colors';
 
 interface DeveloperLogListProps {
   logs: DeveloperLog[];
@@ -8,6 +9,10 @@ interface DeveloperLogListProps {
 }
 
 export const DeveloperLogList: React.FC<DeveloperLogListProps> = ({ logs, selectedProjectId, projects }) => {
+  const getProjectColor = (projectId: string): string => {
+    const index = projects.findIndex(p => p.id === projectId);
+    return projectColors[index % projectColors.length];
+  };
   const filteredAndGroupedLogs = useMemo(() => {
     const filteredLogs = selectedProjectId
       ? logs.filter(log => log.projectId === selectedProjectId)
@@ -35,7 +40,11 @@ export const DeveloperLogList: React.FC<DeveloperLogListProps> = ({ logs, select
 
   return (
     <div>
-      {selectedProject && <h2>Project: {selectedProject.name}</h2>}
+      {selectedProject && (
+        <h2 style={{ color: getProjectColor(selectedProject.id) }}>
+          Project: {selectedProject.name}
+        </h2>
+      )}
       {Object.entries(filteredAndGroupedLogs).map(([developerName, developerLogs]) => (
         <div key={developerName} className="developer-table-container">
           <h3>{developerName}</h3>
@@ -56,7 +65,13 @@ export const DeveloperLogList: React.FC<DeveloperLogListProps> = ({ logs, select
                   <td>{log.hoursWorked.toFixed(1)}</td>
                   <td>{log.category}</td>
                   <td>{log.taskDescription}</td>
-                  {!selectedProjectId && <td>{projects.find(p => p.id === log.projectId)?.name || 'N/A'}</td>}
+                  {!selectedProjectId && (
+                    <td>
+                      <span style={{ color: getProjectColor(log.projectId) }}>
+                        {projects.find(p => p.id === log.projectId)?.name || 'N/A'}
+                      </span>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
