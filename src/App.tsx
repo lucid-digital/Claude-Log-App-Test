@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DeveloperLogForm } from './components/DeveloperLogForm';
 import { DeveloperLogList } from './components/DeveloperLogList';
-import { DeveloperLog } from './types';
+import { DeveloperLog } from './types/DeveloperLog';
 import { categories } from './utils/categories';
 import './App.css';
 
