@@ -6,15 +6,19 @@ interface DeveloperLogListProps {
 }
 
 export const DeveloperLogList: React.FC<DeveloperLogListProps> = ({ logs }) => {
-  const logsByDeveloper = useMemo(() => {
-    return logs.reduce((acc, log) => {
-      if (!acc[log.developerName]) {
-        acc[log.developerName] = [];
+  const groupedLogs = useMemo(() => {
+    console.log('Grouping logs:', logs);
+    const grouped = logs.reduce((acc, log) => {
+      const name = log.developerName.toLowerCase();
+      if (!acc[name]) {
+        acc[name] = [];
       }
-      acc[log.developerName].push(log);
+      acc[name].push(log);
       return acc;
     }, {} as Record<string, DeveloperLog[]>);
-  }, [logs]);
+    console.log('Grouped logs:', grouped);
+    return grouped;
+  }, [logs]); // Add logs to the dependency array
 
   const calculateTotalHours = (developerLogs: DeveloperLog[]): number => {
     return developerLogs.reduce((sum, log) => sum + log.hoursWorked, 0);
@@ -24,12 +28,13 @@ export const DeveloperLogList: React.FC<DeveloperLogListProps> = ({ logs }) => {
     return new Date(dateString).toLocaleDateString();
   };
 
+  console.log('Rendering DeveloperLogList with groupedLogs:', groupedLogs);
+
   return (
     <div>
-      <h2>Developer Logs</h2>
-      {Object.entries(logsByDeveloper).map(([developerName, developerLogs]) => (
+      {Object.entries(groupedLogs).map(([developerName, developerLogs]) => (
         <div key={developerName} className="developer-table-container">
-          <h3>{developerName}</h3>
+          <h2>{developerLogs[0].developerName}</h2>
           <table className="developer-table">
             <thead>
               <tr>
