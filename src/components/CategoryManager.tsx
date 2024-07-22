@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PREDEFINED_CATEGORIES } from '../utils/categories';
+import { categories as predefinedCategories } from '../utils/categories';
 
 interface CategoryManagerProps {
   categories: string[];
@@ -21,7 +21,7 @@ export const CategoryManager: React.FC<CategoryManagerProps> = ({
     }
   };
 
-  const availableCategories = PREDEFINED_CATEGORIES.filter(cat => !categories.includes(cat));
+  const availableCategories = predefinedCategories.filter(cat => !categories.includes(cat));
 
   return (
     <div>
