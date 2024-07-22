@@ -1,0 +1,68 @@
+.app {
+  font-family: 'Roboto', Arial, sans-serif;
+  color: #333;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  background-color: #2c3e50;
+  color: white;
+  padding: 20px;
+  border-radius: 8px 8px 0 0;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 20px;
+  background-color: #ecf0f1;
+  border-radius: 0 0 8px 8px;
+}
+
+.formSection,
+.logsSection,
+.categorySection {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.formSection {
+  grid-column: 1 / 2;
+}
+
+.logsSection {
+  grid-column: 1 / -1;
+}
+
+.categorySection {
+  grid-column: 2 / 3;
+}
+
+h2 {
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 10px;
+  margin-top: 0;
+}
+
+@media (max-width: 768px) {
+  .main {
+    grid-template-columns: 1fr;
+  }
+
+  .formSection,
+  .logsSection,
+  .categorySection {
+    grid-column: 1 / -1;
+  }
+}

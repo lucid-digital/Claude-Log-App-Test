@@ -39,51 +39,68 @@ export const DeveloperLogForm: React.FC<DeveloperLogFormProps> = ({ onAddLog, ca
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        placeholder="Developer Name"
-        value={developerName}
-        onChange={(e) => setDeveloperName(e.target.value)}
-        required
-      />
-      <select
-        value={category}
-        onChange={(e) => {
-          setCategory(e.target.value);
-          setCategoryError('');
-        }}
-        required
-      >
-        <option value="">Select a category</option>
-        {categories.map((cat) => (
-          <option key={cat} value={cat}>
-            {cat}
-          </option>
-        ))}
-      </select>
-      {categoryError && <div style={{ color: 'red' }}>{categoryError}</div>}
-      <input
-        type="number"
-        placeholder="Hours Worked"
-        value={hoursWorked}
-        onChange={(e) => setHoursWorked(e.target.value)}
-        required
-        step="0.1"
-        min="0"
-      />
-      <input
-        type="date"
-        value={date}
-        onChange={(e) => setDate(e.target.value)}
-        required
-      />
-      <textarea
-        placeholder="Task Description"
-        value={taskDescription}
-        onChange={(e) => setTaskDescription(e.target.value)}
-        required
-      />
+    <form onSubmit={handleSubmit} className="form-container">
+      <div className="form-group">
+        <label htmlFor="developerName">Developer Name:</label>
+        <input
+          type="text"
+          id="developerName"
+          value={developerName}
+          onChange={(e) => setDeveloperName(e.target.value)}
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="category">Category:</label>
+        <select
+          id="category"
+          value={category}
+          onChange={(e) => {
+            setCategory(e.target.value);
+            setCategoryError('');
+          }}
+          required
+        >
+          <option value="">Select a category</option>
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
+        {categoryError && <div style={{ color: 'red' }}>{categoryError}</div>}
+      </div>
+      <div className="form-group">
+        <label htmlFor="hoursWorked">Hours Worked:</label>
+        <input
+          type="number"
+          id="hoursWorked"
+          value={hoursWorked}
+          onChange={(e) => setHoursWorked(e.target.value)}
+          required
+          step="0.1"
+          min="0"
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="date">Date:</label>
+        <input
+          type="date"
+          id="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="taskDescription">Task Description:</label>
+        <textarea
+          id="taskDescription"
+          value={taskDescription}
+          onChange={(e) => setTaskDescription(e.target.value)}
+          required
+        />
+      </div>
       <button type="submit">Add Log</button>
     </form>
   );
