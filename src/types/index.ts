@@ -3,4 +3,4 @@ export interface Project {
   name: string;
 }
 
-export { DeveloperLog } from './DeveloperLog';
+export type { DeveloperLog } from './DeveloperLog';
