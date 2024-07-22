@@ -4,4 +4,5 @@ export interface DeveloperLog {
   hoursWorked: number;
   date: string;
   taskDescription: string;
+  category: string;
 }

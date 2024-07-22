@@ -1,30 +1,41 @@
 import React, { useState } from 'react';
 import { DeveloperLog } from '../types/DeveloperLog';
+import { isValidCategory } from '../utils/categories';
 
 interface DeveloperLogFormProps {
   onAddLog: (log: DeveloperLog) => void;
+  categories: string[];
 }
 
-export const DeveloperLogForm: React.FC<DeveloperLogFormProps> = ({ onAddLog }) => {
+export const DeveloperLogForm: React.FC<DeveloperLogFormProps> = ({ onAddLog, categories }) => {
   const [developerName, setDeveloperName] = useState('');
   const [hoursWorked, setHoursWorked] = useState('');
   const [date, setDate] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
+  const [category, setCategory] = useState('');
+  const [categoryError, setCategoryError] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isValidCategory(category)) {
+      setCategoryError('Please select a valid category');
+      return;
+    }
     const newLog: DeveloperLog = {
       id: Date.now().toString(),
       developerName,
       hoursWorked: parseFloat(hoursWorked),
       date,
       taskDescription,
+      category,
     };
     onAddLog(newLog);
     setDeveloperName('');
     setHoursWorked('');
     setDate('');
     setTaskDescription('');
+    setCategory('');
+    setCategoryError('');
   };
 
   return (
@@ -36,6 +47,22 @@ export const DeveloperLogForm: React.FC<DeveloperLogFormProps> = ({ onAddLog }) 
         onChange={(e) => setDeveloperName(e.target.value)}
         required
       />
+      <select
+        value={category}
+        onChange={(e) => {
+          setCategory(e.target.value);
+          setCategoryError('');
+        }}
+        required
+      >
+        <option value="">Select a category</option>
+        {categories.map((cat) => (
+          <option key={cat} value={cat}>
+            {cat}
+          </option>
+        ))}
+      </select>
+      {categoryError && <div style={{ color: 'red' }}>{categoryError}</div>}
       <input
         type="number"
         placeholder="Hours Worked"
