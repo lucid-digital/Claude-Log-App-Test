@@ -36,7 +36,7 @@ export const DeveloperLogList: React.FC<DeveloperLogListProps> = ({ logs, select
     return new Date(dateString).toLocaleDateString();
   };
 
-  const selectedProject = projects.find(p => p.id === selectedProjectId);
+  const selectedProject = projects.find(p => p._id === selectedProjectId);
 
   return (
     <div>
@@ -60,7 +60,7 @@ export const DeveloperLogList: React.FC<DeveloperLogListProps> = ({ logs, select
             </thead>
             <tbody>
               {developerLogs.map((log) => (
-                <tr key={log.id}>
+                <tr key={log._id}>
                   <td>{formatDate(log.date)}</td>
                   <td>{log.hoursWorked.toFixed(1)}</td>
                   <td>{log.category}</td>
@@ -68,7 +68,7 @@ export const DeveloperLogList: React.FC<DeveloperLogListProps> = ({ logs, select
                   {!selectedProjectId && (
                     <td>
                       <span style={{ color: getProjectColor(log.projectId) }}>
-                        {projects.find(p => p.id === log.projectId)?.name || 'N/A'}
+                        {projects.find(p => p._id === log.projectId)?.name || 'N/A'}
                       </span>
                     </td>
                   )}
