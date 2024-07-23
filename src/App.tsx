@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { DeveloperLogForm } from './components/DeveloperLogForm';
 import { DeveloperLogList } from './components/DeveloperLogList';
 import { Sidebar } from './components/Sidebar';
-import { ProjectForm } from './components/ProjectForm';
 import { DeveloperLog } from './types/DeveloperLog';
 import { Project } from './types/Project';
 import { categories } from './utils/categories';
@@ -34,7 +33,6 @@ const App: React.FC = () => {
       <Sidebar projects={projects} onSelectProject={selectProject} onAddProject={addProject} />
       <div className="main-content">
         <h1>Developer Work Log</h1>
-        <ProjectForm onAddProject={addProject} />
         <DeveloperLogForm onAddLog={addLog} categories={categories} projects={projects} />
         <DeveloperLogList logs={filteredLogs} selectedProjectId={selectedProject?.id || null} projects={projects} />
       </div>
