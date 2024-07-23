@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { DeveloperLog, Project } from '../types';
 import { isValidCategory } from '../utils/categories';
+import { formatDateForAPI } from '../utils/dateUtils';
 
 interface DeveloperLogFormProps {
   onAddLog: (log: DeveloperLog) => void;
@@ -47,11 +48,10 @@ export const DeveloperLogForm: React.FC<DeveloperLogFormProps> = ({ onAddLog, ca
       setCategoryError('Please select a valid category');
       return;
     }
-    const newLog: DeveloperLog = {
-      id: Date.now().toString(),
+    const newLog: Omit<DeveloperLog, '_id'> = {
       developerName: formState.developerName,
       hoursWorked: parseFloat(formState.hoursWorked),
-      date: formState.date,
+      date: formatDateForAPI(formState.date),
       taskDescription: formState.taskDescription,
       category: formState.category,
       projectId: formState.projectId,

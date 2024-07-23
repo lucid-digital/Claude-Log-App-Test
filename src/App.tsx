@@ -5,6 +5,7 @@ import { Sidebar } from './components/Sidebar';
 import { DeveloperLog } from './types/DeveloperLog';
 import { Project } from './types/Project';
 import { categories } from './utils/categories';
+import { formatDateForAPI } from './utils/dateUtils';
 import './App.css';
 
 const API_BASE_URL = 'http://localhost:5000/api';
