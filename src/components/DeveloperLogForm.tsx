@@ -4,25 +4,23 @@ import { isValidCategory } from '../utils/categories';
 import { formatDateForAPI } from '../utils/dateUtils';
 
 interface DeveloperLogFormProps {
-  onAddLog: (log: DeveloperLog) => void;
+  onAddLog: (log: Omit<DeveloperLog, '_id'>) => void;
   categories: string[];
   projects: Project[];
 }
 
 interface FormState {
-  developerName: string;
-  hoursWorked: string;
+  description: string;
+  hours: string;
   date: string;
-  taskDescription: string;
   category: string;
   projectId: string;
 }
 
 const initialFormState: FormState = {
-  developerName: '',
-  hoursWorked: '',
+  description: '',
+  hours: '',
   date: '',
-  taskDescription: '',
   category: '',
   projectId: '',
 };
@@ -49,10 +47,9 @@ export const DeveloperLogForm: React.FC<DeveloperLogFormProps> = ({ onAddLog, ca
       return;
     }
     const newLog: Omit<DeveloperLog, '_id'> = {
-      developerName: formState.developerName,
-      hoursWorked: parseFloat(formState.hoursWorked),
+      description: formState.description,
+      hours: parseFloat(formState.hours),
       date: formatDateForAPI(formState.date),
-      taskDescription: formState.taskDescription,
       category: formState.category,
       projectId: formState.projectId,
     };
@@ -68,12 +65,11 @@ export const DeveloperLogForm: React.FC<DeveloperLogFormProps> = ({ onAddLog, ca
   return (
     <form onSubmit={handleSubmit} className="form-container">
       <div className="form-group">
-        <label htmlFor="developerName">Developer Name:</label>
-        <input
-          type="text"
-          id="developerName"
-          name="developerName"
-          value={formState.developerName}
+        <label htmlFor="description">Task Description:</label>
+        <textarea
+          id="description"
+          name="description"
+          value={formState.description}
           onChange={handleInputChange}
           required
         />
@@ -97,12 +93,12 @@ export const DeveloperLogForm: React.FC<DeveloperLogFormProps> = ({ onAddLog, ca
         {categoryError && <div style={{ color: 'red' }}>{categoryError}</div>}
       </div>
       <div className="form-group">
-        <label htmlFor="hoursWorked">Hours Worked:</label>
+        <label htmlFor="hours">Hours Worked:</label>
         <input
           type="number"
-          id="hoursWorked"
-          name="hoursWorked"
-          value={formState.hoursWorked}
+          id="hours"
+          name="hours"
+          value={formState.hours}
           onChange={handleInputChange}
           required
           step="0.1"
@@ -121,16 +117,6 @@ export const DeveloperLogForm: React.FC<DeveloperLogFormProps> = ({ onAddLog, ca
         />
       </div>
       <div className="form-group">
-        <label htmlFor="taskDescription">Task Description:</label>
-        <textarea
-          id="taskDescription"
-          name="taskDescription"
-          value={formState.taskDescription}
-          onChange={handleInputChange}
-          required
-        />
-      </div>
-      <div className="form-group">
         <label htmlFor="projectId">Project:</label>
         <select
           id="projectId"
@@ -141,7 +127,7 @@ export const DeveloperLogForm: React.FC<DeveloperLogFormProps> = ({ onAddLog, ca
         >
           <option value="">Select a project</option>
           {projects.map((proj) => (
-            <option key={proj.id} value={proj.id}>
+            <option key={proj._id} value={proj._id}>
               {proj.name}
             </option>
           ))}
