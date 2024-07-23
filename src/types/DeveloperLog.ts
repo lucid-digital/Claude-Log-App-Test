@@ -1,9 +1,8 @@
 export interface DeveloperLog {
-  id: string;
-  developerName: string;
-  hoursWorked: number;
-  date: string;
-  taskDescription: string;
+  _id: string;
+  description: string;
+  hours: number;
+  date: Date;
   category: string;
   projectId: string;
 }

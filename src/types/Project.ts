@@ -1,4 +1,7 @@
 export interface Project {
-  id: string;
+  _id: string;
   name: string;
+  description?: string;
+  startDate: Date;
+  endDate?: Date;
 }
