@@ -1,6 +1,2 @@
-export interface Project {
-  id: string;
-  name: string;
-}
-
+export type { Project } from './Project';
 export type { DeveloperLog } from './DeveloperLog';
