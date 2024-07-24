@@ -51,26 +51,25 @@ const App: React.FC = () => {
     fetchData();
   }, []);
 
-  const addLog = (newLog: Omit<DeveloperLog, "_id">): void => {                                                      
-       (async () => {                                                                                                   
-          try {                                                                                                          
-            const response = await fetch(`${API_BASE_URL}/logs`, {                                                       
-              method: 'POST',                                                                                            
-              headers: {                                                                                                 
-                'Content-Type': 'application/json',                                                                      
-              },                                                                                                         
-              body: JSON.stringify(newLog),                                                                              
-            });                                                                                                          
-            if (!response.ok) {                                                                                          
-              throw new Error('Failed to add log');                                                                      
-         }                                                                                                            
-          const addedLog = await response.json();                                                                      
-           setLogs((prevLogs) => [...prevLogs, addedLog]);                                                              
-         } catch (error) {                                                                                              
-          setError('Error adding log');                                                                                
-         }                                                                                                              
-       })();                                                                                                            
-      };
+  const addLog = async (newLog: Omit<DeveloperLog, "_id">): Promise<void> => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/logs`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newLog),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to add log');
+      }
+      const addedLog = await response.json();
+      setLogs((prevLogs) => [...prevLogs, addedLog]);
+    } catch (error) {
+      setError('Error adding log');
+      console.error('Error adding log:', error);
+    }
+  };
 
   const addProject = async (newProject: Project) => {
     try {
