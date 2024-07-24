@@ -10,7 +10,7 @@ interface DeveloperLogListProps {
 
 export const DeveloperLogList: React.FC<DeveloperLogListProps> = ({ logs, selectedProjectId, projects }) => {
   const getProjectColor = (projectId: string): string => {
-    const index = projects.findIndex(p => p.id === projectId);
+    const index = projects.findIndex(p => p._id === projectId);
     return projectColors[index % projectColors.length];
   };
   const filteredAndGroupedLogs = useMemo(() => {
@@ -41,7 +41,7 @@ export const DeveloperLogList: React.FC<DeveloperLogListProps> = ({ logs, select
   return (
     <div>
       {selectedProject && (
-        <h2 style={{ color: getProjectColor(selectedProject.id) }}>
+        <h2 style={{ color: getProjectColor(selectedProject._id) }}>
           Project: {selectedProject.name}
         </h2>
       )}
