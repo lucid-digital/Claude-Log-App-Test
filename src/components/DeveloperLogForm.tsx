@@ -10,19 +10,21 @@ interface DeveloperLogFormProps {
 }
 
 interface FormState {
-  description: string;
+  taskDescription: string;
   hours: string;
   date: string;
   category: string;
   projectId: string;
+  developerName: string;
 }
 
 const initialFormState: FormState = {
-  description: '',
+  taskDescription: '',
   hours: '',
   date: '',
   category: '',
   projectId: '',
+  developerName: '',
 };
 
 export const DeveloperLogForm: React.FC<DeveloperLogFormProps> = ({ onAddLog, categories, projects }) => {
@@ -65,11 +67,22 @@ export const DeveloperLogForm: React.FC<DeveloperLogFormProps> = ({ onAddLog, ca
   return (
     <form onSubmit={handleSubmit} className="form-container">
       <div className="form-group">
-        <label htmlFor="description">Task Description:</label>
+        <label htmlFor="taskDescription">Task Description:</label>
         <textarea
-          id="description"
-          name="description"
-          value={formState.description}
+          id="taskDescription"
+          name="taskDescription"
+          value={formState.taskDescription}
+          onChange={handleInputChange}
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="developerName">Developer Name:</label>
+        <input
+          type="text"
+          id="developerName"
+          name="developerName"
+          value={formState.developerName}
           onChange={handleInputChange}
           required
         />
